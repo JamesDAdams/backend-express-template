@@ -122,11 +122,6 @@ Build your application with `bun build` and then run it with `bun start`
 
 If you have this error : `Module '"@prisma/client"' has no exported member 'User'` run `bun prisma generate`
 
-## Original Author
-
-**David Rodarte**
-Updated and tweeked by me : https://github.com/JamesDAdams
-
 ## Licence
 
 MIT
