@@ -45,6 +45,23 @@ export class ExampleController {
 
 
   @Post('/add-file')
+  @OpenAPI({
+    requestBody: {
+      content: {
+        'multipart/form-data': {
+          schema: {
+            type: 'object',
+            properties: {
+              file: {
+                type: 'string',
+                format: 'binary',
+              },
+            },
+          },
+        },
+      },
+    },
+  })
   async uploadFile(@UploadedFile("file", { options: fileUploadOptions }) file: any): Promise<string> {
     log.info(`add-file :: ${file?.originalname} `);
     const readableStream = Readable.from(file.buffer);
@@ -54,7 +71,6 @@ export class ExampleController {
 
     const result: boolean = await this.s3Service.uploadFile(readableStream, file.originalname);
     return result ? successMessage : failureMessage;
-
   }
 
 

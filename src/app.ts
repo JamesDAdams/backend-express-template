@@ -7,7 +7,6 @@ import { Server } from './server/Server';
 const server: Server = new Server();
 
 /** Start Swagger */
-console.log("process.env.ENABLE_SWAGGER:: ", process.env['ENABLE_SWAGGER']);
 if (process.env['ENABLE_SWAGGER'] === "true") {
     server.startSwagger();
 }
