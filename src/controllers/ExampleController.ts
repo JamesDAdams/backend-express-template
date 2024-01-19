@@ -20,6 +20,7 @@ export class ExampleController {
 
   @Get('/public')
   publicExample(): string {
+    log.info("cc");
     return 'This is a public route';
   }
 
@@ -73,17 +74,16 @@ export class ExampleController {
     return result ? successMessage : failureMessage;
   }
 
-
-  @Post('/send-email-test')
+  @Get('/send-email-test')
   @Authorized()
-  async sendEmail(): Promise<string> {
-    log.info("cc");
+  async sendEmail() {
     const email: IEmail = {
-      from: "",
-      to: "",
+      from: "georg@outsider.com",
+      to: "georg@insider.com",
       subject: "test",
       text: "test"
     };
+
     const successMessage: string = 'Email uploaded successfully';
     const failureMessage: string = 'Email upload failed';
 
