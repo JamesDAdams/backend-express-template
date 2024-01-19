@@ -103,7 +103,8 @@ While editing your code, you probably want to automatically build your applicati
 
 ## Postman
 
-You can import `template-express.postman_collection.json` in your postman collections and `workspace.postman_globals.json` in your Environments
+You can import `template-express.postman_collection.json` in your postman collections
+And `workspace.postman_globals.json` in your Environments
 
 ## Docker
 
