@@ -9,7 +9,7 @@ import { Upload } from "@aws-sdk/lib-storage";
  */
 export class S3Service {
     /**
-     * UserService constructor,
+     * S3Service constructor,
      * instantiates S3Client object
      * @constructor
      * @returns void
@@ -25,7 +25,7 @@ export class S3Service {
 
     /**
      * get file from S3
-     * @memberof UserService
+     * @memberof S3Service
      * @returns {Promise<any>}
      */
     public async downloadFile(path: string): Promise<any> {
@@ -41,7 +41,7 @@ export class S3Service {
     }
     /**
      * upload file to S3
-     * @memberof UserService
+     * @memberof S3Service
      * @returns {Promise<boolean>}
      */
     public async uploadFile(file: Readable, fileName: string): Promise<boolean> {

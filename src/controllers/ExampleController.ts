@@ -1,7 +1,7 @@
 import { Authorized, JsonController, Get, UploadedFile, Post } from 'routing-controllers';
 import { OpenAPI } from 'routing-controllers-openapi'
 import { fileUploadOptions } from '../utils/Multer';
-import { sendEmail } from '../utils/NodeMailer';
+import { EmailService } from '../services/EmailService';
 import type { IEmail } from '../interfaces/IEmail';
 import { S3Service } from '../services/S3Service';
 import { Readable } from 'stream';
@@ -10,6 +10,12 @@ import { log } from '../app';
 @JsonController('/example')
 export class ExampleController {
 
+  /**
+   * emailService property
+   * @private
+   * @type {EmailService}
+   */
+  private emailService: EmailService;
   /**
    * S3Service property
    * @private
@@ -23,6 +29,7 @@ export class ExampleController {
    */
   constructor() {
     this.s3Service = new S3Service();
+    this.emailService = new EmailService();
   }
 
 
@@ -89,7 +96,7 @@ export class ExampleController {
     const successMessage = 'Email uploaded successfully';
     const failureMessage = 'Email upload failed';
 
-    const result = await sendEmail(email);
+    const result = await this.emailService.sendEmail(email);
 
     return result ? successMessage : failureMessage;
   }
