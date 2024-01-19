@@ -10,7 +10,6 @@
     "start": "bun ./dist/app.js | pino-pretty",
     "test": "bun test"
   },
-  "keywords": [],
   "author": "",
   "license": "MIT",
   "devDependencies": {
