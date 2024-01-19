@@ -125,10 +125,6 @@ If you have this error : `Module '"@prisma/client"' has no exported member 'User
 ## Original Author
 
 **David Rodarte**
-
-- Website: https://davidrodarte.vercel.app
-- Github: [@DavidRodarte](https://github.com/DavidRodarte)
-
 Updated and tweeked by me : https://github.com/JamesDAdams
 
 ## Licence
