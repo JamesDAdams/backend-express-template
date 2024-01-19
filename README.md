@@ -1,4 +1,4 @@
-# Prisma Express Server
+# Backend Express Template
 
 <p>
   <a href="#" target="_blank">
