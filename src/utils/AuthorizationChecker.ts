@@ -5,12 +5,7 @@ import { UserService } from '../services';
 interface JwtPayload {
   userId: string;
 }
-/**
- * Authorization checker
- * @param {Action} action
- * @param {string[]} roles
- * @returns {Promise<boolean>}
- */
+
 export const authCheck = async (
   action: Action,
   roles: string[],
@@ -26,7 +21,7 @@ export const authCheck = async (
   // Verify jwt and get userId from payload
   const { userId } = jwt.verify(
     token,
-    process.env['SECRET_KEY'] ?? '',
+    process.env['JWT_SECRET_KEY'] ?? '',
   ) as JwtPayload;
 
   // Search user by userId

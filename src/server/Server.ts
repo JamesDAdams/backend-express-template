@@ -6,23 +6,12 @@ import { authCheck } from '../utils/AuthorizationChecker';
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
 import { routingControllersToSpec } from 'routing-controllers-openapi';
 
-/**
- * Server class
- * @class
- */
+
 export class Server {
-  /** @type {express.Application} */
+
   private app: express.Application;
-  /** @type {number} */
   private port: number;
 
-  /**
-   * Server constructor
-   * initializes express server
-   * and sets listening port
-   * @constructor
-   * @returns void
-   */
   public constructor() {
     this.app = createExpressServer({
       cors: true,
@@ -35,11 +24,7 @@ export class Server {
     this.port = Number(process.env['PORT']) || 3000;
   }
 
-  /**
-   * Listen method
-   * @memberof Server
-   * @returns void
-   */
+
   public listen(): void {
     this.app.listen(this.port, () => {
       console.log(`Server running on port ${this.port}`);

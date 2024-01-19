@@ -8,29 +8,13 @@ import { CreateUserDto } from '../dtos/CreateUserDto';
 import type { IUser } from '../interfaces/IUser';
 import { hash } from '../utils/Hash';
 
-/**
- * UserService class
- * @class
- */
 export class UserService {
-  /** @type {PrismaClient} */
   private prisma: PrismaClient;
 
-  /**
-   * UserService constructor,
-   * instantiates prisma object
-   * @constructor
-   * @returns void
-   */
   constructor() {
     this.prisma = new PrismaClient();
   }
 
-  /**
-   * Get all users
-   * @memberof UserService
-   * @returns {Promise<IUser[]>}
-   */
   async index(): Promise<IUser[]> {
     const users: IUser[] = await this.prisma.user.findMany({
       select: {
@@ -50,12 +34,6 @@ export class UserService {
     return users;
   }
 
-  /**
-   * Get one user by UUID
-   * @memberof UserService
-   * @param {string} uuid
-   * @returns {Promise<IUser | null>}
-   */
   async getByUUID(uuid: string): Promise<IUser | null> {
     const user: IUser | null = await this.prisma.user.findUnique({
       where: { uuid },
@@ -81,12 +59,6 @@ export class UserService {
     return user;
   }
 
-  /**
-   * Get user by email
-   * @memberof UserService
-   * @param {string} email
-   * @returns {Promise<IUser | null>}
-   */
   async getByEmail(email: string): Promise<IUser | null> {
     try {
       return await this.prisma.user.findUnique({
@@ -97,12 +69,6 @@ export class UserService {
     }
   }
 
-  /**
-   * Create user
-   * @memberof UserService
-   * @param {CreateUserDto} createUserDto
-   * @returns {Promise<User>}
-   */
   async create(createUserDto: CreateUserDto): Promise<User> {
     try {
       // If email is already registered
@@ -122,12 +88,6 @@ export class UserService {
     }
   }
 
-  /**
-   * Soft delete (set isActive=false) user
-   * @memberof UserService
-   * @param {string} uuid
-   * @returns {Promise<void>}
-   */
   async delete(uuid: string): Promise<void> {
     try {
       // Verify if exists

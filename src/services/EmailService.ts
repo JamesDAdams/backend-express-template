@@ -3,17 +3,8 @@ import { EmailUtil } from "../utils/EmailUtil";
 
 export class EmailService {
 
-    /**
-     * EmailUtil property
-     * @private
-     * @type {NodeMailer}
-     */
     private emailUtil: EmailUtil;
-    /**
-     * Instantiates EmailService
-     * @constructor
-     * @returns void
-     */
+
     constructor() {
         this.emailUtil = new EmailUtil();
     }

@@ -1,7 +1,4 @@
-/**
- * IEmail interface
- * @interface
- */
+
 export interface IEmail {
     from: string;
     to: string;
@@ -11,10 +8,6 @@ export interface IEmail {
     attachments?: Array<IEmailAttachments>;
 }
 
-/**
- * IEmailAttachments interface
- * @interface
- */
 export interface IEmailAttachments {
     filename: string;
     path: string;

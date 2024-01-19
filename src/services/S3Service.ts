@@ -3,17 +3,8 @@ import { Readable } from "node:stream";
 import type { NodeJsClient } from "@smithy/types";
 import { Upload } from "@aws-sdk/lib-storage";
 
-/**
- * S3Service class
- * @class
- */
 export class S3Service {
-    /**
-     * S3Service constructor,
-     * instantiates S3Client object
-     * @constructor
-     * @returns void
-    */
+
     constructor(
         private readonly s3Client = new S3Client({
             region: process.env["AWS_REGION"],
@@ -23,11 +14,6 @@ export class S3Service {
             }
         }) as NodeJsClient<S3Client>) { }
 
-    /**
-     * get file from S3
-     * @memberof S3Service
-     * @returns {Promise<any>}
-     */
     public async downloadFile(path: string): Promise<any> {
         const body = (
             await this.s3Client.send(
@@ -39,11 +25,7 @@ export class S3Service {
         ).Body;
         return body;
     }
-    /**
-     * upload file to S3
-     * @memberof S3Service
-     * @returns {Promise<boolean>}
-     */
+
     public async uploadFile(file: Readable, fileName: string): Promise<boolean> {
         try {
             const upload = new Upload({

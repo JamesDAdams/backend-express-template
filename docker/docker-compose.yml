@@ -16,6 +16,12 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydb
+      POSTGRES_USER: postgres #update this
+      POSTGRES_PASSWORD: password #update this
+      POSTGRES_DB: mydb #update this
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025" # Web port pour MailHog interface
+      - "1025:1025" # SMTP port fort MailHog

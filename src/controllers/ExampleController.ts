@@ -10,94 +10,68 @@ import { log } from '../app';
 @JsonController('/example')
 export class ExampleController {
 
-  /**
-   * emailService property
-   * @private
-   * @type {EmailService}
-   */
   private emailService: EmailService;
-  /**
-   * S3Service property
-   * @private
-   * @type {S3Service}
-   */
   private s3Service: S3Service;
-  /**
-   * Instantiates S3Service
-   * @constructor
-   * @returns void
-   */
+
   constructor() {
     this.s3Service = new S3Service();
     this.emailService = new EmailService();
   }
 
-
-  /**
-   * Public route example
-   */
   @Get('/public')
-  publicExample() {
+  publicExample(): string {
     return 'This is a public route';
   }
 
-  /**
-   * Protected route example
-   */
+
   @Get('/protected')
   @Authorized()
   @OpenAPI({
     description: 'Need to be connected',
   })
-  protectedExample() {
+  protectedExample(): string {
     return 'This is a protected route';
   }
 
-  /**
-   * Admin route example
-   */
+
   @Get('/admin')
   @Authorized('Admin')
   @OpenAPI({
     description: 'Need Admin Role',
   })
-  adminExample() {
+  adminExample(): string {
     return 'This route is for admins only';
   }
 
-  /**
-   * Add file route example
-   */
+
   @Post('/add-file')
-  async uploadFile(@UploadedFile("file", { options: fileUploadOptions }) file: any) {
+  async uploadFile(@UploadedFile("file", { options: fileUploadOptions }) file: any): Promise<string> {
     log.info(`add-file :: ${file?.originalname} `);
     const readableStream = Readable.from(file.buffer);
-    this.s3Service.uploadFile(readableStream, file.originalname).then((statusUpload: boolean) => {
-      if (statusUpload) {
-        return 'File uploaded successfully';
-      } else {
-        return 'File upload failed';
-      }
-    });
+
+    const successMessage = 'File uploaded successfully';
+    const failureMessage = 'File upload failed';
+
+    const result: boolean = await this.s3Service.uploadFile(readableStream, file.originalname);
+    return result ? successMessage : failureMessage;
+
   }
 
-  /**
-   * Send test email
-   */
+
   @Post('/send-email-test')
   @Authorized()
-  async sendEmail() {
+  async sendEmail(): Promise<string> {
+    log.info("cc");
     const email: IEmail = {
       from: "",
       to: "",
       subject: "test",
       text: "test"
     };
-    const successMessage = 'Email uploaded successfully';
-    const failureMessage = 'Email upload failed';
+    const successMessage: string = 'Email uploaded successfully';
+    const failureMessage: string = 'Email upload failed';
 
-    const result = await this.emailService.sendEmail(email);
-
+    const result: boolean = await this.emailService.sendEmail(email);
     return result ? successMessage : failureMessage;
   }
 }

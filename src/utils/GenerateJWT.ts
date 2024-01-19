@@ -1,10 +1,5 @@
 import jwt from 'jsonwebtoken';
 
-/**
- * Generate JWT
- * @param {any} userId
- * @returns {Promise<any>}
- */
 export const generateJWT = async (userId: any): Promise<any> => {
   // Promise
   return new Promise<any>((resolve, reject) => {
@@ -13,8 +8,8 @@ export const generateJWT = async (userId: any): Promise<any> => {
     // Sign JWT
     jwt.sign(
       payload,
-      process.env['SECRET_KEY'] ?? '',
-      { expiresIn: '4h' },
+      process.env['JWT_SECRET_KEY'] ?? '',
+      { expiresIn: process.env['JWT_SECRET_KEY'] ?? '4h' },
       (err, token) => {
         if (err) {
           reject('Error while generating token');

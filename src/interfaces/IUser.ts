@@ -1,7 +1,4 @@
-/**
- * IUser interface
- * @interface
- */
+
 export interface IUser {
   id?: number;
   uuid: string;
