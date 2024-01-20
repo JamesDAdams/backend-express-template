@@ -56,6 +56,8 @@ Base Express server template with Prisma ORM (v5), routing-controllers, JWT auth
 - 🔡 Environment variables with [Dotenv](https://www.npmjs.com/package/dotenv)
 - 🧵 Logging systen with [Pino](https://www.npmjs.com/package/pino)
 - ⏩ Fast build, test, install with [Bun](https://bun.sh/)
+- 🤼 Load test with [Artillery](https://www.npmjs.com/package/artillery)
+- 🧪 CI/CD for test and build
 - ✅ Validations
 - 📜 DTO pattern
 
