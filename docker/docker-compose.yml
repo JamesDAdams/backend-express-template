@@ -20,6 +20,14 @@ services:
       POSTGRES_PASSWORD: password #update this
       POSTGRES_DB: mydb #update this
 
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    ports:
+      - "8181:80"
+    volumes:
+      - /home/pgadmin:/var/lib/pgadmin #update this
+
   mailhog:
     image: mailhog/mailhog
     ports:
