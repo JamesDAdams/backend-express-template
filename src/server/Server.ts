@@ -1,14 +1,15 @@
 import express from 'express';
-import { createExpressServer, getMetadataArgsStorage } from 'routing-controllers';
+import {
+  createExpressServer,
+  getMetadataArgsStorage,
+} from 'routing-controllers';
 import path from 'path';
 import { ErrorHandler } from '../middleware/ErrorHandler';
 import { authCheck } from '../utils/AuthorizationChecker';
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
 import { routingControllersToSpec } from 'routing-controllers-openapi';
 
-
 export class Server {
-
   private app: express.Application;
   private port: number;
 
@@ -24,7 +25,6 @@ export class Server {
     this.port = Number(process.env['PORT']) || 3000;
   }
 
-
   public listen(): void {
     this.app.listen(this.port, () => {
       console.log(`Server running on port ${this.port}`);
@@ -33,22 +33,21 @@ export class Server {
 
   public startSwagger(): void {
     const packageJson = require('../../package.json');
-    const { defaultMetadataStorage } = require('class-transformer/cjs/storage')
+    const { defaultMetadataStorage } = require('class-transformer/cjs/storage');
 
     const routingControllersOptions = {
       controllers: [path.join(__dirname + '/../controllers/*.js')],
       routePrefix: '/api',
-    }
-
+    };
 
     // Parse class-validator classes into JSON Schema:
     const schemas = validationMetadatasToSchemas({
       classTransformerMetadataStorage: defaultMetadataStorage,
       refPointerPrefix: '#/components/schemas/',
-    })
+    });
 
     // Parse routing-controllers classes into OpenAPI spec:
-    const storage = getMetadataArgsStorage()
+    const storage = getMetadataArgsStorage();
     const spec = routingControllersToSpec(storage, routingControllersOptions, {
       components: {
         schemas,
@@ -72,13 +71,9 @@ export class Server {
           url: 'https://github.com/JamesDAdams/Prisma-Express-Template',
         },
       },
-    })
-
+    });
 
     const swaggerUi = require('swagger-ui-express');
     this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(spec));
   }
-
 }
-
-

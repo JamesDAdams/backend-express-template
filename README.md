@@ -110,7 +110,7 @@ And `workspace.postman_globals.json` in your Environments
 
 ## Docker
 
-You can launch the server and the database in docker with this command (edit variable in the `docker-compose.yml`)
+You can launch the server, the database and a smtp server in docker with this command (edit variable in the `docker-compose.yml`)
 
 ```
 cd /docker

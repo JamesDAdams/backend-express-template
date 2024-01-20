@@ -2,10 +2,8 @@ import { JsonController, Post, Body } from 'routing-controllers';
 import { LoginDto } from '../dtos/LoginDto';
 import { AuthService } from '../services';
 
-
 @JsonController('/auth')
 export class AuthController {
-
   private authService: AuthService;
 
   constructor() {
@@ -17,5 +15,3 @@ export class AuthController {
     return this.authService.login(loginDto);
   }
 }
-
-

@@ -12,10 +12,8 @@ import { UserService } from '../services/';
 import { CreateUserDto } from '../dtos/CreateUserDto';
 import type { IUser } from '../interfaces/IUser';
 
-
 @JsonController('/user')
 export class UserController {
-
   private userService: UserService;
 
   constructor() {

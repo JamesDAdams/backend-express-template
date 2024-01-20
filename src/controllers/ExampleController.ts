@@ -1,5 +1,11 @@
-import { Authorized, JsonController, Get, UploadedFile, Post } from 'routing-controllers';
-import { OpenAPI } from 'routing-controllers-openapi'
+import {
+  Authorized,
+  JsonController,
+  Get,
+  UploadedFile,
+  Post,
+} from 'routing-controllers';
+import { OpenAPI } from 'routing-controllers-openapi';
 import { fileUploadOptions } from '../utils/Multer';
 import { EmailService } from '../services/EmailService';
 import type { IEmail } from '../interfaces/IEmail';
@@ -9,7 +15,6 @@ import { log } from '../app';
 
 @JsonController('/example')
 export class ExampleController {
-
   private emailService: EmailService;
   private s3Service: S3Service;
 
@@ -20,10 +25,9 @@ export class ExampleController {
 
   @Get('/public')
   publicExample(): string {
-    log.info("cc");
+    log.info('cc');
     return 'This is a public route';
   }
-
 
   @Get('/protected')
   @Authorized()
@@ -34,7 +38,6 @@ export class ExampleController {
     return 'This is a protected route';
   }
 
-
   @Get('/admin')
   @Authorized('Admin')
   @OpenAPI({
@@ -43,7 +46,6 @@ export class ExampleController {
   adminExample(): string {
     return 'This route is for admins only';
   }
-
 
   @Post('/add-file')
   @OpenAPI({
@@ -63,14 +65,19 @@ export class ExampleController {
       },
     },
   })
-  async uploadFile(@UploadedFile("file", { options: fileUploadOptions }) file: any): Promise<string> {
+  async uploadFile(
+    @UploadedFile('file', { options: fileUploadOptions }) file: any,
+  ): Promise<string> {
     log.info(`add-file :: ${file?.originalname} `);
     const readableStream = Readable.from(file.buffer);
 
     const successMessage = 'File uploaded successfully';
     const failureMessage = 'File upload failed';
 
-    const result: boolean = await this.s3Service.uploadFile(readableStream, file.originalname);
+    const result: boolean = await this.s3Service.uploadFile(
+      readableStream,
+      file.originalname,
+    );
     return result ? successMessage : failureMessage;
   }
 
@@ -78,10 +85,10 @@ export class ExampleController {
   @Authorized()
   async sendEmail() {
     const email: IEmail = {
-      from: "georg@outsider.com",
-      to: "georg@insider.com",
-      subject: "test",
-      text: "test"
+      from: 'georg@outsider.com',
+      to: 'georg@insider.com',
+      subject: 'test',
+      text: 'test',
     };
 
     const successMessage: string = 'Email uploaded successfully';

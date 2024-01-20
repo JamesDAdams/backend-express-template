@@ -1,7 +1,7 @@
-import { Readable } from "stream";
+import { Readable } from 'stream';
 
 export interface IFileS3 {
-    Bucket: string;
-    Key: string;
-    Body: Readable;
+  Bucket: string;
+  Key: string;
+  Body: Readable;
 }

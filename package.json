@@ -8,7 +8,9 @@
     "prisma:deploy": "npx prisma migrate deploy",
     "build": "tsc",
     "start": "bun ./dist/app.js | pino-pretty",
-    "test": "bun test"
+    "test:unit": "bun test src",
+    "test:lint": "eslint \"**/*.{js,ts}\" --quiet --fix",
+    "test:artillery": "bun artillery run src/test/Artillery/asciiart-load-test.yml"
   },
   "author": "",
   "license": "MIT",
@@ -41,6 +43,7 @@
     "@prisma/client": "^5.8.1",
     "@smithy/types": "^2.9.0",
     "@types/jest": "^29.5.11",
+    "artillery": "^2.0.4",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "bun": "^1.0.23",
@@ -49,6 +52,8 @@
     "class-validator-jsonschema": "4.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
     "eslint-plugin-security": "^2.1.0",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",

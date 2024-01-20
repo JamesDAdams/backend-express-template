@@ -7,21 +7,20 @@ import { Server } from './server/Server';
 const server: Server = new Server();
 
 /** Start Swagger */
-if (process.env['ENABLE_SWAGGER'] === "true") {
-    server.startSwagger();
+if (process.env['ENABLE_SWAGGER'] === 'true') {
+  server.startSwagger();
 }
 
 /** Starts listening */
 server.listen();
 
 /** logging system */
-const pino = require('pino')
+const pino = require('pino');
 export const log = pino({
-    transport: {
-      target: 'pino-pretty',
-      options: {
-        colorize: true
-      }
-    }
-  });
-
+  transport: {
+    target: 'pino-pretty',
+    options: {
+      colorize: true,
+    },
+  },
+});

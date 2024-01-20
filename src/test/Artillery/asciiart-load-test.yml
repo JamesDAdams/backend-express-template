@@ -1,0 +1,48 @@
+config:
+  target: "http://localhost:3000" # Specifies the target URL of the API you want to test
+
+  phases: # Phases define the load profile for the test, including warm-up, ramp-up, and spike phases
+    - duration: 60
+      arrivalRate: 1
+      rampTo: 5
+      name: Warm-up phase
+    - duration: 60
+      arrivalRate: 5
+      rampTo: 10
+      name: Ramp-up load
+    - duration: 30
+      arrivalRate: 10
+      rampTo: 30
+      name: Spike phase
+
+  plugins: # Plugins add extra functionality to the test, such as ensuring responses meet certain criteria
+    ensure: {}
+    apdex: {}
+    metrics-by-endpoint: {}
+
+  apdex: # Apdex measures user satisfaction based on response times, with a threshold of 100
+    threshold: 100
+
+  ensure: # Ensure plugin sets response time thresholds for p99 and p95 percentiles
+    thresholds:
+      - http.response_time.p99: 100
+      - http.response_time.p95: 75
+
+scenarios: # Scenarios define user actions during the test, including making GET and POST requests
+  - flow:
+      - loop:
+        - get:
+            url: "/example/public"
+        - get:
+            url: "/example/protected"
+        - get:
+            url: "/example/admin"
+        - post:
+            url: "/example/add-file"
+            json:
+              file: "path/to/the/file/to/send" # Replace with the path to the file you want to send
+        - get:
+            url: "/example/send-email-test"
+            headers:
+              Authorization: "Bearer YOUR_JWT_TOKEN" # Replace with a valid JWT token
+        count: 100

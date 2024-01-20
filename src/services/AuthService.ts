@@ -37,5 +37,4 @@ export class AuthService {
       throw new InternalServerError(`Error ${error}`);
     }
   }
-
 }
