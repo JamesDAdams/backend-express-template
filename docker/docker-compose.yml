@@ -33,3 +33,8 @@ services:
     ports:
       - "8025:8025" # Web port pour MailHog interface
       - "1025:1025" # SMTP port fort MailHog
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"

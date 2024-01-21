@@ -12,20 +12,22 @@ import type { IEmail } from '../interfaces/IEmail';
 import { S3Service } from '../services/S3Service';
 import { Readable } from 'stream';
 import { log } from '../app';
+import { NotificationWorker } from '../services/workers/NotificationWorker';
 
 @JsonController('/example')
 export class ExampleController {
   private emailService: EmailService;
   private s3Service: S3Service;
+  private notificationWorker: NotificationWorker;
 
   constructor() {
     this.s3Service = new S3Service();
     this.emailService = new EmailService();
+    this.notificationWorker = new NotificationWorker();
   }
 
   @Get('/public')
   publicExample(): string {
-    log.info('cc');
     return 'This is a public route';
   }
 
@@ -96,5 +98,11 @@ export class ExampleController {
 
     const result: boolean = await this.emailService.sendEmail(email);
     return result ? successMessage : failureMessage;
+  }
+
+  @Get('/worker-test')
+  async workerTest() {
+    this.notificationWorker.notificationQueue.add('email', "test@test.com");
+    return "test worker";
   }
 }
