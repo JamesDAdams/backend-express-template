@@ -1,21 +1,24 @@
 stages:
+  - install_dependencies
   - test
   - build
+
+install_dependencies:
+  stage: install_dependencies
+  script:
+    - bun i
 
 test-lint:
   stage: test
   script:
-    - bun i
     - bun test:lint
 
 test-unit:
   stage: test
   script:
-    - bun i
     - bun test:unit
 
 build:
   stage: build
   script:
-    - bun i
     - bun build

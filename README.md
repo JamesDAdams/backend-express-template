@@ -57,7 +57,7 @@ Base Express server template with Prisma ORM (v5), routing-controllers, JWT auth
 - 🧵 Logging systen with [Pino](https://www.npmjs.com/package/pino)
 - ⏩ Fast build, test, install with [Bun](https://bun.sh/)
 - 🤼 Load test with [Artillery](https://www.npmjs.com/package/artillery)
-- 🤼 Worker and batch processing with [Bullmq](https://www.npmjs.com/package/bullmq)
+- 👷 Worker and batch processing with [Bullmq](https://www.npmjs.com/package/bullmq)
 - 🧪 CI/CD for test and build
 - ✅ Validations
 - 📜 DTO pattern
@@ -68,6 +68,7 @@ Base Express server template with Prisma ORM (v5), routing-controllers, JWT auth
 📦/ # Main folder
  ┣ 📂postman # The Postman config to import
  ┣ 📂docker # For launch the server and db in docker container
+ ┣ 📂prisma # the SQL schema and migrations
  ┣ 📦src # Main folder of code
   ┣ 📂controllers # Folder for handlers functions called from routes
   ┣ 📂dtos # DTO pattern for handling data
@@ -76,6 +77,7 @@ Base Express server template with Prisma ORM (v5), routing-controllers, JWT auth
   ┣ 📂middleware # Folder for express middlewares
   ┣ 📂server # Express server instance with routing-controllers config
   ┣ 📂services # Services for write core code bussiness
+  ┣ test # Unit test and Artillery test
   ┣ 📂utils # Utils for usage in the application
   ┗ 📜app.ts # Main file
 ```
