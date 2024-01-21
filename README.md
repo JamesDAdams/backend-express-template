@@ -36,7 +36,7 @@
   </a>
 </p>
 
-Base Express server template with Prisma ORM (v5), routing-controllers, JWT authentication, TypeScript, Swagger, Postman config, Docker, Email, S3, Logging, Bun
+Base Express server template with Prisma ORM (v5), routing-controllers, JWT authentication, TypeScript, Swagger, Postman config, Docker, Email, S3, Logging, Bun, Worker, Batch
 
 ## Features
 
@@ -57,6 +57,7 @@ Base Express server template with Prisma ORM (v5), routing-controllers, JWT auth
 - 🧵 Logging systen with [Pino](https://www.npmjs.com/package/pino)
 - ⏩ Fast build, test, install with [Bun](https://bun.sh/)
 - 🤼 Load test with [Artillery](https://www.npmjs.com/package/artillery)
+- 🤼 Worker and batch processing with [Bullmq](https://www.npmjs.com/package/bullmq)
 - 🧪 CI/CD for test and build
 - ✅ Validations
 - 📜 DTO pattern
