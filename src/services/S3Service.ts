@@ -1,6 +1,5 @@
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Readable } from 'node:stream';
-import type { NodeJsClient } from '@smithy/types';
 import { Upload } from '@aws-sdk/lib-storage';
 
 export class S3Service {
@@ -11,19 +10,22 @@ export class S3Service {
         accessKeyId: process.env['AWS_ACCESS_KEY_ID'] ?? '',
         secretAccessKey: process.env['AWS_SECRET_ACCESS_KEY'] ?? '',
       },
-    }) as NodeJsClient<S3Client>,
+    }),
   ) {}
 
-  public async downloadFile(path: string): Promise<any> {
-    const body = (
-      await this.s3Client.send(
+  public async downloadFile(path: string): Promise<Readable | null> {
+    try {
+      const response = await this.s3Client.send(
         new GetObjectCommand({
           Bucket: process.env['AWS_S3_BUCKET'],
           Key: path,
         }),
-      )
-    ).Body;
-    return body;
+      );
+      return response.Body as Readable;
+    } catch (e) {
+      console.error('Error downloading file:', e);
+      return null;
+    }
   }
 
   public async uploadFile(file: Readable, fileName: string): Promise<boolean> {

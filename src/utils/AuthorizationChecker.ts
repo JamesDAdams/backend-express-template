@@ -1,48 +1,30 @@
 import { type Action, UnauthorizedError } from 'routing-controllers';
-import jwt from 'jsonwebtoken';
-import { UserService } from '../services';
-
-interface JwtPayload {
-  userId: string;
-}
+import { verifyJWT } from './Jwt';
+import { log } from '../app';
 
 export const authCheck = async (
   action: Action,
-  roles: string[],
 ): Promise<boolean> => {
-  // Get token from headers
   const authorization = action.request.headers['authorization'];
+  if (!authorization) throw new UnauthorizedError('Missing token');
+
   const token = authorization.replace('Bearer ', '');
+  if (!token) throw new UnauthorizedError('Missing token');
 
-  if (!token) {
-    throw new UnauthorizedError('Missing token');
+  try {
+    const payload = verifyJWT(token);
+    if (!payload.user) throw new UnauthorizedError('User not found in token');
+    if (!payload.user.isActive) throw new UnauthorizedError('Blocked user');
+
+    // Attacher l'utilisateur à la requête
+    action.request.user = payload.user;
+
+    return true;
+
+  } catch (error) {
+    log.info(`Invalid token: ${error}`);
+    throw new UnauthorizedError('Invalid token');
   }
 
-  // Verify jwt and get userId from payload
-  const { userId } = jwt.verify(
-    token,
-    process.env['JWT_SECRET_KEY'] ?? '',
-  ) as JwtPayload;
 
-  // Search user by userId
-  const userService = new UserService();
-  const user = await userService.getByUUID(userId);
-
-  // User not found
-  if (!user) {
-    throw new UnauthorizedError('Invalid user');
-  }
-  // User is not active
-  if (!user.isActive) {
-    throw new UnauthorizedError('Blocked user');
-  }
-
-  // Active user and no role required
-  if (user && !roles.length) return true;
-  // Active user and role admited
-
-  if (user && roles.find((role) => user.role.name === role)) return true;
-
-  // Not authorized
-  throw new UnauthorizedError("You're not authorized");
 };

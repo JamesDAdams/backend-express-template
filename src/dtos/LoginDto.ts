@@ -6,3 +6,8 @@ export class LoginDto {
   @Length(8, 100)
   password: string;
 }
+
+export class LogoutDto {
+  token: string;
+}
+

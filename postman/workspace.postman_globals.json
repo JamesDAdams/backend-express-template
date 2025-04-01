@@ -8,7 +8,7 @@
 		},
 		{
 			"key": "port",
-			"value": "3000",
+			"value": "3001",
 			"type": "default",
 			"enabled": true
 		},

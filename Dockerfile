@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Expose the port your app is running on
-EXPOSE 3000
+EXPOSE 3001
 
 # Start your app when the container starts
 CMD ["npm", "start"]

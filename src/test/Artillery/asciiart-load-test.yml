@@ -1,5 +1,5 @@
 config:
-  target: "http://localhost:3000" # Specifies the target URL of the API you want to test
+  target: "http://localhost:3001" # Specifies the target URL of the API you want to test
 
   phases: # Phases define the load profile for the test, including warm-up, ramp-up, and spike phases
     - duration: 60

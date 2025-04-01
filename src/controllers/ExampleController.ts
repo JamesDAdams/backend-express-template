@@ -102,7 +102,7 @@ export class ExampleController {
 
   @Get('/worker-test')
   async workerTest() {
-    this.notificationWorker.notificationQueue.add('email', "test@test.com");
-    return "test worker";
+    this.notificationWorker.notificationQueue.add('email', 'test@test.com');
+    return 'test worker';
   }
 }

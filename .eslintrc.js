@@ -5,13 +5,11 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: [
-    '@typescript-eslint/eslint-plugin',
-    'eslint-plugin-prettier'
+    '@typescript-eslint/eslint-plugin'
   ],
   extends: [
     'plugin:@typescript-eslint/recommended',
-    'plugin:security/recommended-legacy',
-    'plugin:prettier/recommended',
+    'plugin:security/recommended-legacy'
   ],
   root: true,
   env: {
@@ -24,5 +22,7 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
+    'prettier/prettier': 'off'
   },
 };
