@@ -85,7 +85,6 @@ export class UserService {
           userRoles: true
         },
       });
-      console.log('User by email:', user);
 
       return user;
     } catch (error) {
@@ -95,9 +94,7 @@ export class UserService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     try {
-      console.log('Create User DTO 2:', createUserDto);
       const existingUser = await this.getByEmail(createUserDto.email);
-      console.log('Existing User:', existingUser);
       if (existingUser) throw new BadRequestError('Email is already registered');
 
       const gravatarService = new GravatarService();
@@ -105,7 +102,6 @@ export class UserService {
       if(avatar) createUserDto.avatar = avatar;
 
       const hashedPassword = await hash(createUserDto.password);
-      console.log('Hashed Password:', hashedPassword);
       const { ...userData } = createUserDto;
 
       return this.prisma.user.create({

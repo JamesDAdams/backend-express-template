@@ -9,6 +9,7 @@
     "prisma:migrate": "npx prisma migrate dev --name dev",
     "prisma:deploy": "npx prisma migrate deploy",
     "prisma:generate": "npx prisma generate",
+    "prisma:seed": "npx prisma db seed",
     "build": "tsc",
     "start": "bun ./dist/app.js | pino-pretty",
     "test:unit": "bun test src",
@@ -75,5 +76,8 @@
     "routing-controllers": "0.10.4",
     "routing-controllers-openapi": "4.0.0",
     "swagger-ui-express": "^4.1.2"
+  },
+  "prisma": {
+    "seed": "ts-node src/prisma/seed.ts"
   }
 }

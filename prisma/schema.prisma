@@ -26,6 +26,7 @@ model User {
   userRoles UserRole[]
   friendsRequested Friendship[] @relation("requester")
   friendsReceived  Friendship[] @relation("receiver")
+  userKanas UserKana[]
 
   @@map("users")
 }
@@ -68,6 +69,30 @@ model Friendship {
   @@map("friendships")
 }
 
+// Kana model
+model Kana {
+  id        Int       @id @default(autoincrement())
+  character String    @unique
+  type      KanaType
+
+  userKanas UserKana[]
+
+  @@map("kanas")
+}
+
+// Pivot table for User-Kana relation
+model UserKana {
+  user      User     @relation(fields: [userId], references: [id])
+  kana      Kana     @relation(fields: [kanaId], references: [id])
+  userId    Int
+  kanaId    Int
+  isLearned Boolean  @default(false)
+  updatedAt DateTime @updatedAt
+
+  @@id([userId, kanaId])
+  @@map("user_kanas")
+}
+
 enum FriendshipStatus {
   PENDING
   ACCEPTED
@@ -79,4 +104,9 @@ enum UserStatus {
   OFFLINE
   STUDYING
   QUIZ
+}
+
+enum KanaType {
+  HIRAGANA
+  KATAKANA
 }

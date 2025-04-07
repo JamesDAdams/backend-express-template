@@ -5,10 +5,13 @@ import { log } from '../app';
 export const authCheck = async (
   action: Action,
 ): Promise<boolean> => {
+  console.log('Authorization check started');
   const authorization = action.request.headers['authorization'];
+  console.log('Authorization header:', authorization);
   if (!authorization) throw new UnauthorizedError('Missing token');
 
   const token = authorization.replace('Bearer ', '');
+  console.log('Token extracted:', token);
   if (!token) throw new UnauthorizedError('Missing token');
 
   try {
@@ -18,6 +21,8 @@ export const authCheck = async (
 
     // Attacher l'utilisateur à la requête
     action.request.user = payload.user;
+
+    console.log('User found in token:', payload.user);
 
     return true;
 
