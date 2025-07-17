@@ -27,6 +27,7 @@ model User {
   friendsRequested Friendship[] @relation("requester")
   friendsReceived  Friendship[] @relation("receiver")
   userKanas UserKana[]
+  quizzes Quiz[]
 
   @@map("users")
 }
@@ -93,6 +94,26 @@ model UserKana {
   @@map("user_kanas")
 }
 
+// Quiz model
+model Quiz {
+	id					Int				@id @default(autoincrement())
+	datetime		DateTime	@default(now())
+	type				QuizType
+	onlyKnowKana		Boolean		@default(false)
+	onlyUnknowKana	Boolean		@default(false)
+	random			Boolean		@default(true)
+	numberOfQuestion	Int
+	answerFormat	AnswerFormat
+	duration		Int			// Duration in seconds
+	score			Int
+
+	// Add relation to User
+	userId			Int
+	user			User		@relation(fields: [userId], references: [id])
+
+	@@map("quizzes")
+}
+
 enum FriendshipStatus {
   PENDING
   ACCEPTED
@@ -109,4 +130,19 @@ enum UserStatus {
 enum KanaType {
   HIRAGANA
   KATAKANA
+}
+
+enum QuizType {
+	HIRAGANA
+	KATAKANA
+  KANJI
+  VOCABULARY
+  LISTENING
+}
+
+enum AnswerFormat {
+	ROMAJI
+	KANA
+	WRITING
+  SPEAKING
 }
