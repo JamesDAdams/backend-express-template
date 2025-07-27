@@ -1,4 +1,4 @@
-import { PrismaClient, CharacterListStatus } from '@prisma/client';
+import { PrismaClient, CharacterListStatus, CharacterListLevel } from '@prisma/client';
 import { BadRequestError, ForbiddenError, InternalServerError, NotFoundError } from 'routing-controllers';
 
 export class CharacterListService {
@@ -13,14 +13,16 @@ export class CharacterListService {
 	 * @param userId - The ID of the user creating the list
 	 * @param name - The name of the character list
 	 * @param status - The visibility status of the character list
+	 * @param level - The level of the character list
 	 * @returns The created character list
 	 */
-	async createCharacterList(userId: number, name: string, status?: CharacterListStatus) {
+	async createCharacterList(userId: number, name: string, status?: CharacterListStatus, level?: CharacterListLevel) {
 		try {
 			const characterList = await this.prisma.characterList.create({
 				data: {
 					name,
 					status: status || CharacterListStatus.PUBLIC,
+					// level,
 					creatorId: userId
 				},
 				include: {
@@ -61,9 +63,10 @@ export class CharacterListService {
 	 * @param userId - The ID of the user attempting to update
 	 * @param name - The new name of the character list
 	 * @param status - The new status of the character list
+	 * @param level - The new level of the character list
 	 * @returns The updated character list
 	 */
-	async updateCharacterList(listId: number, userId: number, name?: string, status?: CharacterListStatus) {
+	async updateCharacterList(listId: number, userId: number, name?: string, status?: CharacterListStatus, level?: CharacterListLevel) {
 		try {
 			// Check if the user is the creator
 			const characterList = await this.prisma.characterList.findUnique({
@@ -81,6 +84,7 @@ export class CharacterListService {
 			const updateData: any = {};
 			if (name !== undefined) updateData.name = name;
 			if (status !== undefined) updateData.status = status;
+			// if (level !== undefined) updateData.level = level;
 
 			return await this.prisma.characterList.update({
 				where: { id: listId },
@@ -481,11 +485,11 @@ export class CharacterListService {
 	 * Get all characters from a character list with user progress
 	 * @param userId - The ID of the user
 	 * @param characterListId - The ID of the character list
-	 * @returns All characters with user progress information
+	 * @returns All characters with user progress information and complete list metadata
 	 */
 	async getCharactersFromList(userId: number, characterListId: number) {
 		try {
-			// Check if character list exists
+			// Check if character list exists and get complete metadata
 			const characterList = await this.prisma.characterList.findUnique({
 				where: { id: characterListId },
 				include: {
@@ -494,6 +498,25 @@ export class CharacterListService {
 							id: true,
 							name: true,
 							avatar: true
+						}
+					},
+					_count: {
+						select: {
+							characters: true,
+							userSubscriptions: {
+								where: {
+									isActive: true
+								}
+							}
+						}
+					},
+					userSubscriptions: {
+						where: {
+							userId,
+							isActive: true
+						},
+						select: {
+							subscribedAt: true
 						}
 					}
 				}
@@ -525,7 +548,7 @@ export class CharacterListService {
 				}
 			});
 
-			// Format the response
+			// Format the characters
 			const formattedCharacters = characters.map(character => ({
 				id: character.id,
 				char: character.char,
@@ -542,15 +565,22 @@ export class CharacterListService {
 				lastUpdated: character.userCharacterProgress.length > 0 ? character.userCharacterProgress[0].updatedAt : null
 			}));
 
+			// Return complete response with list metadata and characters
 			return {
+				id: characterList.id,
+				name: characterList.name,
+				status: characterList.status,
+				level: characterList.level,
+				desription: characterList.description,
+				createdAt: characterList.createdAt,
+				creator: characterList.creator,
+				charactersCount: characterList._count.characters,
+				subscribersCount: characterList._count.userSubscriptions,
+				isSubscribed: characterList.userSubscriptions.length > 0,
+				subscribedAt: characterList.userSubscriptions.length > 0 ? characterList.userSubscriptions[0].subscribedAt : null,
+				isOwner: characterList.creatorId === userId,
 				characters: formattedCharacters,
-				totalCount: characters.length,
-				characterList: {
-					id: characterList.id,
-					name: characterList.name,
-					status: characterList.status,
-					creator: characterList.creator
-				}
+				totalCount: characters.length
 			};
 		} catch (error) {
 			if (error instanceof NotFoundError || error instanceof ForbiddenError) {
@@ -566,6 +596,7 @@ export class CharacterListService {
 	 * @param userId - The ID of the user making the search
 	 * @param searchTerm - Search term for list name
 	 * @param status - Filter by status
+	 * @param level - Filter by level
 	 * @param creatorId - Filter by creator ID
 	 * @param page - Page number for pagination
 	 * @param limit - Number of items per page
@@ -575,6 +606,7 @@ export class CharacterListService {
 		userId: number,
 		searchTerm?: string,
 		status?: CharacterListStatus,
+		level?: CharacterListLevel,
 		creatorId?: number,
 		page: number = 1,
 		limit: number = 20
@@ -603,6 +635,13 @@ export class CharacterListService {
 					status
 				});
 			}
+
+			// Add level filter
+			// if (level) {
+			// 	whereClause.AND.push({
+			// 		level
+			// 	});
+			// }
 
 			// Add creator filter
 			if (creatorId) {
@@ -673,6 +712,7 @@ export class CharacterListService {
 				id: list.id,
 				name: list.name,
 				status: list.status,
+				// level: list.level,
 				createdAt: list.createdAt,
 				creator: list.creator,
 				charactersCount: list._count.characters,
@@ -695,6 +735,7 @@ export class CharacterListService {
 				filters: {
 					searchTerm,
 					status,
+					level,
 					creatorId
 				}
 			};
@@ -749,6 +790,7 @@ export class CharacterListService {
 				id: subscription.characterList.id,
 				name: subscription.characterList.name,
 				status: subscription.characterList.status,
+				// level: subscription.characterList.level,
 				createdAt: subscription.characterList.createdAt,
 				creator: subscription.characterList.creator,
 				charactersCount: subscription.characterList._count.characters,
@@ -764,6 +806,78 @@ export class CharacterListService {
 		} catch (error) {
 			console.error('Error getting user subscribed lists:', error);
 			throw new InternalServerError('Error retrieving subscribed character lists');
+		}
+	}
+
+	/**
+	 * Get a specific character list by ID
+	 * @param userId - The ID of the user requesting the list
+	 * @param listId - The ID of the character list
+	 * @returns The character list with metadata
+	 */
+	async getCharacterListById(userId: number, listId: number) {
+		try {
+			const characterList = await this.prisma.characterList.findUnique({
+				where: { id: listId },
+				include: {
+					creator: {
+						select: {
+							id: true,
+							name: true,
+							avatar: true
+						}
+					},
+					_count: {
+						select: {
+							characters: true,
+							userSubscriptions: {
+								where: {
+									isActive: true
+								}
+							}
+						}
+					},
+					userSubscriptions: {
+						where: {
+							userId,
+							isActive: true
+						},
+						select: {
+							subscribedAt: true
+						}
+					}
+				}
+			});
+
+			if (!characterList) {
+				throw new NotFoundError('Character list not found');
+			}
+
+			// Check if user has access to this list
+			if (characterList.status === CharacterListStatus.PRIVATE && characterList.creatorId !== userId) {
+				throw new ForbiddenError('Access denied to this character list');
+			}
+
+			// Format the response
+			return {
+				id: characterList.id,
+				name: characterList.name,
+				status: characterList.status,
+				// level: characterList.level,
+				createdAt: characterList.createdAt,
+				creator: characterList.creator,
+				charactersCount: characterList._count.characters,
+				subscribersCount: characterList._count.userSubscriptions,
+				isSubscribed: characterList.userSubscriptions.length > 0,
+				subscribedAt: characterList.userSubscriptions.length > 0 ? characterList.userSubscriptions[0].subscribedAt : null,
+				isOwner: characterList.creatorId === userId
+			};
+		} catch (error) {
+			if (error instanceof NotFoundError || error instanceof ForbiddenError) {
+				throw error;
+			}
+			console.error('Error getting character list:', error);
+			throw new InternalServerError('Error retrieving character list');
 		}
 	}
 }

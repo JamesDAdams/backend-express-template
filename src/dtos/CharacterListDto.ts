@@ -1,13 +1,15 @@
-import { CharacterListStatus } from '@prisma/client';
+import { CharacterListStatus, CharacterListLevel } from '@prisma/client';
 
 export class CreateCharacterListDto {
 	name: string;
 	status?: CharacterListStatus;
+	level?: CharacterListLevel;
 }
 
 export class UpdateCharacterListDto {
 	name?: string;
 	status?: CharacterListStatus;
+	level?: CharacterListLevel;
 }
 
 export class ToggleCharacterProgressDto {
@@ -37,6 +39,7 @@ export class AddCharactersDto {
 export class SearchCharacterListsQueryDto {
 	searchTerm?: string;
 	status?: CharacterListStatus;
+	level?: CharacterListLevel;
 	creatorId?: number;
 	page?: number;
 	limit?: number;

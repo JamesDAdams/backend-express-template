@@ -122,7 +122,9 @@ model CharacterList {
 	id				Int				@id @default(autoincrement())
 	name			String		@db.VarChar(100)
 	status		CharacterListStatus	@default(PUBLIC)
+	level			CharacterListLevel?
 	createdAt	DateTime	@default(now())
+  description	String?	@db.VarChar(500)
 
 	creatorId		Int?
 	creator			User?			@relation(fields: [creatorId], references: [id])
@@ -140,12 +142,13 @@ model Character {
 	romaji						String		@db.VarChar(50)
 	groupe						Int?
 	svg_id						Int[]
-	alternative_characters	String?		@db.VarChar(100)
+	alternative_characters	Boolean?
 	tenten						Boolean?
 	maru							Boolean?
 	dakuon						Boolean?
 	translate					String[]	@default([])
 	kana							String?		@db.VarChar(100)
+  type              CharacterType?
 
 	// Relation to CharacterList
 	characterListId		Int
@@ -219,4 +222,32 @@ enum CharacterListStatus {
 	PRIVATE
 	PUBLIC
 	FRIENDS_ONLY
+}
+
+enum CharacterListLevel {
+	LEVEL_10
+	LEVEL_9
+	LEVEL_8
+	LEVEL_7
+	LEVEL_6
+	LEVEL_5
+	LEVEL_4
+	LEVEL_3
+	PRE_2
+	LEVEL_2
+	PRE_1
+	LEVEL_1
+  JLTPT_N1
+  JLTPT_N2
+  JLTPT_N3
+  JLTPT_N4
+  JLTPT_N5
+}
+
+enum CharacterType {
+	KANA
+  HIRAGANA
+  KATAKANA
+  KANJI
+  VOCABULARY
 }

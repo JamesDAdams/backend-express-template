@@ -3,7 +3,7 @@ import { OpenAPI } from 'routing-controllers-openapi';
 import { CharacterListService } from '../services/CharacterListService';
 import { AuthenticatedRequest } from '../interfaces/AuthInterface';
 import { CreateCharacterListDto, UpdateCharacterListDto, ToggleCharacterProgressDto, BulkUpdateCharacterProgressDto, AddCharactersDto, SearchCharacterListsQueryDto } from '../dtos/CharacterListDto';
-import { CharacterListStatus } from '@prisma/client';
+import { CharacterListStatus, CharacterListLevel } from '@prisma/client';
 
 @JsonController('/character-lists')
 export class CharacterListController {
@@ -32,6 +32,11 @@ export class CharacterListController {
 								enum: Object.values(CharacterListStatus),
 								description: 'The visibility status of the character list',
 							},
+							level: {
+								type: 'string',
+								enum: ['LEVEL_10', 'LEVEL_9', 'LEVEL_8', 'LEVEL_7', 'LEVEL_6', 'LEVEL_5', 'LEVEL_4', 'LEVEL_3', 'PRE_2', 'LEVEL_2', 'PRE_1', 'LEVEL_1'],
+								description: 'The level of the character list',
+							},
 						},
 					},
 				},
@@ -39,7 +44,7 @@ export class CharacterListController {
 		},
 	})
 	async createCharacterList(@Body() data: CreateCharacterListDto, @Req() request: AuthenticatedRequest) {
-		return this.characterListService.createCharacterList(request.user.id, data.name, data.status);
+		return this.characterListService.createCharacterList(request.user.id, data.name, data.status, data.level);
 	}
 
 	@Put('/:id')
@@ -70,6 +75,11 @@ export class CharacterListController {
 								enum: Object.values(CharacterListStatus),
 								description: 'The new visibility status of the character list',
 							},
+							level: {
+								type: 'string',
+								enum: ['LEVEL_10', 'LEVEL_9', 'LEVEL_8', 'LEVEL_7', 'LEVEL_6', 'LEVEL_5', 'LEVEL_4', 'LEVEL_3', 'PRE_2', 'LEVEL_2', 'PRE_1', 'LEVEL_1'],
+								description: 'The new level of the character list',
+							},
 						},
 					},
 				},
@@ -77,7 +87,26 @@ export class CharacterListController {
 		},
 	})
 	async updateCharacterList(@Param('id') id: number, @Body() data: UpdateCharacterListDto, @Req() request: AuthenticatedRequest) {
-		return this.characterListService.updateCharacterList(id, request.user.id, data.name, data.status);
+		return this.characterListService.updateCharacterList(id, request.user.id, data.name, data.status, data.level);
+	}
+
+	@Get('/:id')
+	@Authorized()
+	@OpenAPI({
+		summary: 'Get a character list by ID',
+		description: 'Retrieve a specific character list with metadata and subscription information',
+		parameters: [
+			{
+				name: 'id',
+				in: 'path',
+				required: true,
+				schema: { type: 'integer' },
+				description: 'The ID of the character list',
+			},
+		],
+	})
+	async getCharacterListById(@Param('id') id: number, @Req() request: AuthenticatedRequest) {
+		return this.characterListService.getCharacterListById(request.user.id, id);
 	}
 
 	@Post('/:id/subscribe')
@@ -328,6 +357,13 @@ export class CharacterListController {
 				description: 'Filter by status',
 			},
 			{
+				name: 'level',
+				in: 'query',
+				required: false,
+				schema: { type: 'string', enum: ['LEVEL_10', 'LEVEL_9', 'LEVEL_8', 'LEVEL_7', 'LEVEL_6', 'LEVEL_5', 'LEVEL_4', 'LEVEL_3', 'PRE_2', 'LEVEL_2', 'PRE_1', 'LEVEL_1'] },
+				description: 'Filter by level',
+			},
+			{
 				name: 'creatorId',
 				in: 'query',
 				required: false,
@@ -355,6 +391,7 @@ export class CharacterListController {
 			request.user.id,
 			query.searchTerm,
 			query.status,
+			query.level,
 			query.creatorId,
 			query.page || 1,
 			query.limit || 20
